@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDB from "./config/DB";
 import taskRouter from "./routes/taskRoute";
+import authRouter from "./routes/authRoute";
 import userRouter from "./routes/userRoute";
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(cookieParser());
 connectDB();
 
 app.use("/api/v1", taskRouter);
+app.use("/api/v1", authRouter);
 app.use("/api/v1", userRouter);
 
 app.listen(PORT, () => {
