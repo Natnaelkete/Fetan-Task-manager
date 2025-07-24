@@ -1,8 +1,17 @@
-import express from "express";
-import { createTask } from "../controllers/taskController";
+import { Router } from "express";
+import {
+  createTask,
+  getTasks,
+  updateTask,
+  deleteTask,
+} from "../controllers/taskController";
+import verifyToken from "../middleware/authMiddleware";
 
-const router = express.Router();
+const router: Router = Router();
 
-router.post("/", createTask);
+router.post("/tasks", verifyToken, createTask);
+router.get("/tasks", verifyToken, getTasks);
+router.patch("/tasks/:id", verifyToken, updateTask);
+router.delete("/tasks/:id", verifyToken, deleteTask);
 
 export default router;
