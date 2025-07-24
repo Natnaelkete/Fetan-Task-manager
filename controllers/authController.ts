@@ -23,8 +23,7 @@ export const signup = async (req: Request, res: Response) => {
         email: user.email,
       });
     } else {
-      res.status(400);
-      throw new Error("Invalid user data");
+      res.status(401).json({ message: "Invalid user data" });
     }
   } catch (error) {
     console.log("Signup error", error);
@@ -47,8 +46,7 @@ export const signin = async (req: Request, res: Response) => {
         email: user.email,
       });
     } else {
-      res.status(401);
-      throw new Error("Invalid email or password");
+      res.status(401).json({ message: "Invalid email or password" });
     }
   } catch (error) {
     console.log("Signup error", error);
