@@ -10,6 +10,7 @@ import taskRouter from "./routes/taskRoute";
 import authRouter from "./routes/authRoute";
 import userRouter from "./routes/userRoute";
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
+import { setCatch } from "./middleware/catchMiddleware";
 
 dotenv.config();
 
@@ -29,6 +30,14 @@ app.use(limiter);
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(setCatch);
+
+app.use(
+  express.static("public", {
+    maxAge: "1d",
+    etag: true,
+  })
+);
 
 connectDB();
 
