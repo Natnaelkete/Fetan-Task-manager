@@ -1,8 +1,12 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import User from "../models/userModel";
 import generateToken from "../utils/generateToken";
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { name, email, password } = req.body;
 
@@ -27,11 +31,15 @@ export const signup = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.log("Signup error", error);
-    res.status(500).send({ message: "Something went wrong" });
+    next(error);
   }
 };
 
-export const signin = async (req: Request, res: Response) => {
+export const signin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { email, password } = req.body;
 
@@ -50,16 +58,20 @@ export const signin = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.log("Signup error", error);
-    res.status(500).send({ message: "Something went wrong" });
+    next(error);
   }
 };
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     res.clearCookie("auth_token");
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Signup error", error);
-    res.status(500).send({ message: "Something went wrong" });
+    next(error);
   }
 };

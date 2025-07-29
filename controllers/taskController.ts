@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Task from "../models/taskModel";
 
-export const createTask = async (req: Request, res: Response) => {
+export const createTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { name } = req.body;
     if (!name) {
@@ -22,11 +26,15 @@ export const createTask = async (req: Request, res: Response) => {
     await task.save();
     res.status(201).json(task);
   } catch (error) {
-    res.status(400).json({ message: (error as Error).message });
+    next(error);
   }
 };
 
-export const getTasks = async (req: Request, res: Response) => {
+export const getTasks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     if (!req.userId) {
       res.status(401).json({ error: "User not authenticated" });
@@ -52,11 +60,15 @@ export const getTasks = async (req: Request, res: Response) => {
       currentPage: Number(page),
     });
   } catch (error) {
-    res.status(400).json({ message: (error as Error).message });
+    next(error);
   }
 };
 
-export const updateTask = async (req: Request, res: Response) => {
+export const updateTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { status } = req.body;
     if (!["pending", "completed"].includes(status)) {
@@ -80,11 +92,15 @@ export const updateTask = async (req: Request, res: Response) => {
 
     res.json(task);
   } catch (error) {
-    res.status(400).json({ error: (error as Error).message });
+    next(error);
   }
 };
 
-export const deleteTask = async (req: Request, res: Response) => {
+export const deleteTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     if (!req.userId) {
       res.status(401).json({ message: "User not authenticated" });
@@ -102,6 +118,6 @@ export const deleteTask = async (req: Request, res: Response) => {
 
     res.json({ message: "Task deleted successfully" });
   } catch (error) {
-    res.status(400).json({ message: (error as Error).message });
+    next(error);
   }
 };
