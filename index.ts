@@ -5,6 +5,8 @@ import cors from "cors";
 import connectDB from "./config/DB";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import compression from "compression";
+import { logger } from "./config/logger";
 
 import taskRouter from "./routes/taskRoute";
 import authRouter from "./routes/authRoute";
@@ -18,19 +20,25 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 100,
-});
+// const limiter = rateLimit({
+//   windowMs: 1 * 60 * 1000,
+//   max: 100,
+// });
 
+app.use(compression());
 app.use(cors({ origin: "*" }));
-
 app.use(helmet());
-app.use(limiter);
+// app.use(limiter);
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(setCatch);
+app.use(
+  express.static("public", {
+    maxAge: "1d",
+    etag: true,
+  })
+);
 
 app.use(
   express.static("public", {
@@ -49,5 +57,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server is running in on PORT ${PORT}`);
+  logger.info(`Server is running in on PORT ${PORT}`);
 });

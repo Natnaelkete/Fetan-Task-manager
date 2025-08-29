@@ -1,5 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import Task from "../models/taskModel";
+import mongoose from "mongoose";
+
+export const checkId = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  val: any
+) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (isValid) {
+    res.status(404).json({ message: "Invalid Id" });
+  }
+
+  next();
+};
 
 export const createTask = async (
   req: Request,

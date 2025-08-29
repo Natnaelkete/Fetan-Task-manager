@@ -48,16 +48,16 @@ export const signin = async (
     if (user && (await user.matchPassword(password))) {
       generateToken(res, user._id);
 
-      res.json({
+      return res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
       });
-    } else {
-      res.status(401).json({ message: "Invalid email or password" });
     }
-  } catch (error) {
-    console.log("Signup error", error);
+
+    return res.status(401).json({ message: "Invalid email or password" });
+  } catch (error: any) {
+    console.log(error);
     next(error);
   }
 };
